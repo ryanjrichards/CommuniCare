@@ -1,0 +1,21 @@
+api_key: ${DD_API_KEY}              # Datadog API key (required)
+site: datadoghq.com                 # Your Datadog site (e.g., datadoghq.eu)
+
+tags:
+  - "env:${ENV}"                    # environment (ok to have both env: and env tag)
+  - "team:${TEAM}"                  # team that owns/operates the host
+  - "site:${SITE}"                  # dc/region/site (pick one convention)
+  - "role:app-server"               # host role
+  - "owner:${OWNER}"                # optional
+  - "host_group:${HOST_GROUP}"      # e.g. shared-app / batch / web (optional, low-cardinality)
+
+process_config:
+  process_collection:
+    enabled: true                   # Enables process collection (improves CNM attribution)
+
+logs_enabled: true    
+
+runtime_security_config:
+  enabled: true                     # CSM Threats: real-time threat detection (file, process, network)
+compliance_config:
+  enabled: true                     # CSM Misconfigurations: CIS benchmark / posture checks
