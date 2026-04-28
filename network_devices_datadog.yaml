@@ -1,5 +1,5 @@
-api_key: ${DD_API_KEY}
-site: datadoghq.com
+api_key: ${DD_API_KEY}              # Datadog API key (required)
+site: datadoghq.com                 # Your Datadog site (e.g., datadoghq.eu)
 
 tags:
   - "env:${ENV}"                  # e.g. prod / staging
