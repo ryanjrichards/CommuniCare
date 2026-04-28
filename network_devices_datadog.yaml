@@ -1,0 +1,52 @@
+api_key: ${DD_API_KEY}
+site: datadoghq.com
+
+tags:
+  - "env:${ENV}"                  # e.g. prod / staging
+  - "team:${TEAM}"                # e.g. network / platform
+  - "site:${SITE}"                # e.g. dc1 / iad
+  - "role:ndm-poller"
+  - "owner:${OWNER}"              # optional
+
+# Network Device Monitoring (SNMP) Autodiscovery
+network_devices:
+  autodiscovery:
+    use_deduplication: true          # (optional, Agent 7.67+) reduces duplicate device discovery
+    workers: 100                     # number of concurrent discovery workers
+    discovery_interval: 3600         # seconds between subnet scans
+    loader: core                     # recommended SNMP implementation
+    use_device_id_as_hostname: true  # recommended stable device identity in Datadog
+
+    configs:
+      # --- Subnet #1 (SNMPv2 example) ---
+      - network_address: 10.10.0.0/24        # CIDR to scan
+        snmp_version: 2                      # SNMP version for this subnet
+        port: 161                            # SNMP port (default 161)
+        community_string: '${SNMP_COMMUNITY_1}'  # SNMPv2 community (quote recommended)
+        tags:                                # tags applied to ALL devices discovered in this subnet
+          - "env:${ENV}"                     # best practice: environment tag
+          - "team:${TEAM}"                   # owning team
+          - "site:${SITE}"                   # DC/region/site grouping
+          - "device_scope:core"              # optional: logical scope
+
+      # --- Subnet #2 (SNMPv3 example) ---
+      - network_address: 10.20.0.0/24        # CIDR to scan
+        snmp_version: 3                      # SNMPv3 for this subnet
+        user: '${SNMPV3_USER}'               # SNMPv3 security username
+        authProtocol: 'SHA256'               # auth algo: MD5, SHA, SHA224, SHA256, SHA384, SHA512
+        authKey: '${SNMPV3_AUTH_KEY}'        # auth key/passphrase (quote recommended)
+        privProtocol: 'AES256'               # privacy algo: DES, AES, AES192, AES192C, AES256, AES256C
+        privKey: '${SNMPV3_PRIV_KEY}'        # privacy key/passphrase (quote recommended)
+        port: 161                            # SNMP port (default 161)
+        tags:                                # tags applied to ALL devices discovered in this subnet
+          - "env:${ENV}"
+          - "team:${TEAM}"
+          - "site:${SITE}"
+          - "device_scope:distribution"      # example scope label
+
+
+    # Ping tests for discovered devices (only devices that respond to SNMP are pinged)
+    ping:
+      enabled: true
+      linux:
+        use_raw_socket: false  # set true only if needed (requires system-probe privileges)
