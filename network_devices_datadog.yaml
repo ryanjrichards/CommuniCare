@@ -50,3 +50,7 @@ network_devices:
       enabled: true
       linux:
         use_raw_socket: false  # set true only if needed (requires system-probe privileges)
+
+logs_enabled: true # enable logs collection
+logs_config:
+  use_sourcehost_tag: true # adds a source_host tags to logs with the source IP
