@@ -4,6 +4,16 @@ logs_config:
 logs_enabled: true
 network_devices:
   autodiscovery:
+    discovery_interval: 3600
+    loader: core
+    use_deduplication: true
+    use_device_id_as_hostname: true
+    workers: 100
+    ping:
+      enabled: true
+      linux:
+        use_raw_socket: false
+      timeout: 3000
     configs:
     - community_string: '**********'
       loader: core
@@ -19,16 +29,7 @@ network_devices:
       snmp_version: 2
       tags:
       -
-    discovery_interval: 3600
-    loader: core
-    use_deduplication: true
-    use_device_id_as_hostname: true
-    workers: 100
-    ping:
-      enabled: true
-      linux:
-        use_raw_socket: false
-      timeout: 3000
+    
 proxy:
   http: ""
   https: ""
